@@ -10,16 +10,16 @@ app = FastAPI()
 
 # Allowed origins add your domain if needed
 origins = [
-    "http://localhost/",
-    "http://localhost:3001/",
+    "http://localhost",
+    "http://localhost:3001",
 ]
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=[""],
-    allow_headers=[""],
+    allow_methods=["*"],
+    allow_headers=["*"],
     )
 
 connection_string = connection_string
@@ -77,7 +77,15 @@ async def process_request(data: dict):
         return {"notes": result}
     else:
         print(f"No notes found for the email address {email}")
-        return {"notes": ""}
+        return {"notes": [{
+      "_id": {
+        "$oid": "0"
+      },
+      "email": "luca@bobby68.de",
+      "title": "No Notes Found",
+      "description": "Create a new one by clicking the plus sign in the top right hand corner.",
+      "steps": ""
+    }]}
 
 
 # Endpoint for creating user notes (requires user email)
