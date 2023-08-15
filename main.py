@@ -56,6 +56,35 @@ async def process_request(data: dict):
         return {"error": "Invalid request"}
 
 
+# Endpoint to Translate with DeepL Ai
+@app.post('/translate')
+async def process_request(data:dict):
+    url = "https://api-free.deepl.com/v2/translate"
+
+    source = data.get('source')
+    target = data.get('target')
+    text = data.get('text')
+
+    headers = {
+        "Content-Type": "application/x-www-form-urlencoded",
+    }
+
+    data = {
+        "auth_key": DeepL_Key,
+        "text": text,
+        "source_lang": source,
+        "target_lang": target,
+    }
+
+    response = requests.post(url, headers=headers, data=data)
+
+    if response.status_code == 200:
+        translated_text = response.json()["translations"][0]["text"]
+        return {translated_text, response.status_code}
+    else:
+        return {"Translation failure Sorry", response.status_code}
+
+
 # Endpoint to check my bots status
 @app.get('/bobby-bot')
 async def process_request():
